@@ -1,18 +1,22 @@
+require('dotenv').config();
 const express = require('express');
 const { connectMongoDB } = require('./database/mongodb');
-const { connectMySQL, mysqlConnection } = require('./database/mysql');
+const mysqlPool = require('./database/mysql');  // Import the connection pool
+const { mongoose } = require('./database/mongodb');  // Import mongoose instance
+
+// Define your MongoDB schema and model here
+const SomeMongoModel = mongoose.model('SomeMongoModel', new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String },
+}));
 
 // Connect to databases
 connectMongoDB();
-connectMySQL();
 
 const app = express();
 app.use(express.json());
 
-// MongoDB Route (Replace 'SomeMongoModel' with your actual model)
-const { mongoose } = require('./database/mongodb');
-const SomeMongoModel = mongoose.model('SomeMongoModel', new mongoose.Schema({}));
-
+// MongoDB Route
 app.get('/mongo-data', async (req, res) => {
   try {
     const data = await SomeMongoModel.find({});
@@ -22,15 +26,16 @@ app.get('/mongo-data', async (req, res) => {
   }
 });
 
-// MySQL Route
+// MySQL Route (if needed)
 app.get('/mysql-data', (req, res) => {
-  mysqlConnection.query('SELECT * FROM some_table', (err, results) => {
+  mysqlPool.query('SELECT * FROM some_table', (err, results) => {
     if (err) res.status(500).send(err);
     else res.send(results);
   });
 });
 
-const PORT = 8000;
+// Set port with fallback if the environment variable is not set
+const PORT = process.env.MY_PORT || 6000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
