@@ -1,17 +1,25 @@
-'use client'
-import axios from "axios";
-import React, { useState } from "react";
+// src/components/AuthForm.js
+'use client';
+import { login } from '@/lib/redux/slices/userSlices';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 require('dotenv').config();
-
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and register
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    phone: "",
+    username: '',
+    email: '',
+    password: '',
+    phone: '',
   });
+  const dispatch = useDispatch(); // Initialize the dispatch hook
+  const user = useSelector((state) => state.user.user);
+  useEffect(() => {
+    console.log('User in Profile:', user);
+  }, [user]);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,13 +33,19 @@ const AuthForm = () => {
 
     try {
       const response = await axios.post(url, formData, {
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
       console.log(response.data); // Handle response
-      alert(response.data.message);
+
+      if (response.data.user) {
+        // Dispatch login action if the response contains user data
+        alert(JSON.stringify(response.data.user))
+        dispatch(login(response.data.user));
+        alert(response.data.message); // Optionally show success message
+      }
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
-      alert("An error occurred. Please try again.");
+      alert('An error occurred. Please try again.');
     }
   };
 
@@ -39,7 +53,7 @@ const AuthForm = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">
-          {isLogin ? "Login" : "Register"}
+          {isLogin ? 'Login' : 'Register'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
@@ -105,16 +119,16 @@ const AuthForm = () => {
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
           >
-            {isLogin ? "Login" : "Register"}
+            {isLogin ? 'Login' : 'Register'}
           </button>
         </form>
         <p className="text-center text-sm mt-4">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <span
             onClick={() => setIsLogin(!isLogin)}
             className="text-blue-500 cursor-pointer hover:underline"
           >
-            {isLogin ? "Register" : "Login"}
+            {isLogin ? 'Register' : 'Login'}
           </span>
         </p>
       </div>
