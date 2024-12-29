@@ -10,10 +10,12 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.user = action.payload; // Save user data in state
+      return { ...state, user: action.payload };
     },
     logout: (state) => {
-      state.user = null; // Clear user data on logout
+      localStorage.removeItem('persist:root');
+      localStorage.clear()
+      // state.user = null; 
     },
   },
 });

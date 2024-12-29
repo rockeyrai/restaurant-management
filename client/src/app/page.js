@@ -2,10 +2,11 @@
 'use client';
 import { login } from '@/lib/redux/slices/userSlices';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 require('dotenv').config();
-
+useRouter
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and register
   const [formData, setFormData] = useState({
