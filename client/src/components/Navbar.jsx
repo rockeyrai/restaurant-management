@@ -2,13 +2,13 @@
 import { useRouter } from "next/navigation";
 import { Home, Info, MenuIcon, Gift, LogIn, LogOut, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "./AuthContext";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { current } from "@reduxjs/toolkit";
 
 export default function Navbar() {
   const router = useRouter();
-  const { isLoggedIn, login, logout } = useAuth();
+  const [isLoggedIn,setIsLoggedIn] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleNavigation = (page) => {
@@ -19,11 +19,17 @@ export default function Navbar() {
     e.preventDefault();
     onSearch(searchTerm);
   };
+
+  const logout =()=>{
+    setIsLoggedIn(current.value = false)
+  }
+  const login =()=>{
+    setIsLoggedIn(current.value = true)
+  }
   return (
-    <nav className="bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <h2>Name</h2>
+    <nav className="bg-blue-600 text-primary-foreground">
+        <div className="flex items-center justify-between h-16  bg-red-800 px-10">
+          <h1>Name</h1>
           <form onSubmit={handleSearch} className="flex items-center">
             <Input
               type="search"
@@ -49,7 +55,7 @@ export default function Navbar() {
             )}
           </div>
         </div>
-        <div className="flex items-center justify-between h-10">
+        <div className="flex items-center justify-between h-10 px-10">
           <div className="flex items-center space-x-4">
             <Button variant="ghost" onClick={() => handleNavigation("home")}>
               {/* <Home className="mr-2 h-4 w-4" />  */}
@@ -69,7 +75,7 @@ export default function Navbar() {
             </Button>
           </div>
         </div>
-      </div>
+
     </nav>
   );
 }

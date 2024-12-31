@@ -6,6 +6,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -122,3 +128,197 @@ html {
   }
 }
 
+:root {
+  --primary-color: #d9a726;
+  --primary-hover-color: rgba(224, 184, 82, 1);
+  --secondary-color: #173436;
+  --secondary-hover-color: rgba(240, 240, 240, 1);
+  --body-color: #434343;
+  --bg-color: #e8ebeb;
+  --white-color: #fff;
+  --black-color: #000;
+  --gray-color: #d9d9d9;
+  --link-color: #0056c7;
+  --primary-font: "Poppins", sans-serif;
+  --secondary-font: "Open Sans", sans-serif;
+  --body-font-size: 16px;
+  --line-height: 1.4;
+  --btn-font-size: 14px;
+  --border-radius: 16px;
+  --transition: all 0.3s ease-in-out;
+  --fs-display-1: clamp(38px, 4vw, 60px);
+  --fs-display-2: clamp(28px, 4vw, 38px);
+  --fs-display-3: clamp(24px, 4vw, 28px);
+  --fs-display-4: clamp(20px, 4vw, 24px);
+  --fs-display-5: clamp(18px, 5vw, 18px);
+  --fs-display-6: clamp(16px, 4vw, 16px);
+  --fs-display-7: 14px;
+}
+body {
+  font-family: var(--secondary-font);
+  font-size: var(--body-font-size);
+  color: var(--body-color);
+  line-height: var(--line-height);
+  background-color: var(--bg-color);
+  font-weight: 400;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  color: var(--secondary-color);
+  font-family: var(--primary-font);
+  font-weight: 500;
+  line-height: var(--line-height);
+}
+h1,
+.h1 {
+  color: var(--white-color);
+  font-size: var(--fs-display-1);
+}
+h2,
+.h2 {
+  font-size: var(--fs-display-2);
+}
+h3,
+.h3 {
+  font-size: var(--fs-display-3);
+}
+h4,
+.h4 {
+  font-size: var(--fs-display-4);
+}
+h5,
+.h5 {
+  font-size: var(--fs-display-5);
+}
+h6,
+.h6 {
+  font-size: var(--fs-display-6);
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+p {
+  margin-bottom: 24px;
+}
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+ul,
+ol {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.page {
+  margin-bottom: 0;
+}
+/* global utilities */
+
+.btn {
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: var(--fs-display-7);
+  line-height: var(--line-height);
+  border-radius: 12px;
+  border: none;
+  transition: var(--transition);
+}
+.btn:focus {
+  outline: none;
+}
+.btn-primary {
+  --bs-btn-color: var(--black-color);
+  --bs-btn-hover-color: var(--black-color);
+  --bs-btn-bg: var(--primary-color);
+  --bs-btn-hover-bg: var(--primary-hover-color);
+  --bs-btn-hover-border-color: var(--primary-hover-color);
+  --bs-btn-active-color: var(--black-color);
+  --bs-btn-active-bg: var(--primary-hover-color);
+  --bs-btn-active-border-color: var(--primary-hover-color);
+  --bs-btn-disabled-color: var(--black-color);
+  --bs-btn-disabled-bg: rgba(224, 184, 82, 1);
+}
+
+.btn-secondary {
+  --bs-btn-color: var(--black-color);
+  --bs-btn-hover-color: var(--black-color);
+  --bs-btn-bg: var(--white-color);
+  --bs-btn-hover-bg: var(--seconsary-hover-color);
+  --bs-btn-hover-border-color: var(--secondary-hover-color);
+  --bs-btn-active-color: var(--black-color);
+  --bs-btn-active-bg: var(--secondary-hover-color);
+  --bs-btn-active-border-color: var(--secondary-hover-color);
+  --bs-btn-disabled-color: var(--black-color);
+  --bs-btn-disabled-bg: rgba(240, 240, 240, 1);
+}
+
+.mb-40 {
+  margin-bottom: 40px;
+}
+.mb-80 {
+  margin-bottom: 80px;
+}
+.mt-40 {
+  margin-top: 40px;
+}
+.meta {
+  gap: 12px;
+}
+.date {
+  font-size: var(--fs-display-7);
+  display: block;
+  margin-top: 12px;
+}
+.block {
+  padding: 150px 0;
+}
+.card {
+  border: none;
+  background-color: transparent;
+  border-radius: var(--border-radius);
+}
+.card-body {
+  padding: 0;
+}
+.card-img {
+  margin-bottom: 0;
+  border-radius: var(--border-radius);
+}
+.card-img img {
+  width: 100%;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 80px;
+}
+.pagination .page-numbers {
+  margin: 0 5px;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: rgba(140, 140, 140, 1);
+}
+.pagination a:hover,
+.pagination .current {
+  color: var(--black-color);
+  font-weight: 600;
+}
+.pagination .page-numbers.current {
+  color: var(--black-color);
+  font-weight: 600;
+}
