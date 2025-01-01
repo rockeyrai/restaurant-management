@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 require('dotenv').config();
-useRouter
+
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and register
   const [formData, setFormData] = useState({
@@ -17,6 +17,7 @@ const AuthForm = () => {
   });
   const dispatch = useDispatch(); // Initialize the dispatch hook
   const user = useSelector((state) => state.user.user);
+  const router =useRouter()
   useEffect(() => {
     console.log('User in Profile:', user);
   }, [user]);
@@ -40,9 +41,9 @@ const AuthForm = () => {
 
       if (response.data.user) {
         // Dispatch login action if the response contains user data
-        alert(JSON.stringify(response.data.user))
         dispatch(login(response.data.user));
         alert(response.data.message); // Optionally show success message
+        router.push('/')
       }
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
@@ -59,7 +60,7 @@ const AuthForm = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div>
-              <label htmlFor="username" className="block text-sm font-medium">
+              <label htmlFor="username" className=" text-sm font-medium">
                 Username
               </label>
               <input
@@ -74,7 +75,7 @@ const AuthForm = () => {
             </div>
           )}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
+            <label htmlFor="email" className=" text-sm font-medium">
               Email
             </label>
             <input
@@ -88,7 +89,7 @@ const AuthForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium">
+            <label htmlFor="password" className=" text-sm font-medium">
               Password
             </label>
             <input
@@ -103,7 +104,7 @@ const AuthForm = () => {
           </div>
           {!isLogin && (
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium">
+              <label htmlFor="phone" className=" text-sm font-medium">
                 Phone Number
               </label>
               <input

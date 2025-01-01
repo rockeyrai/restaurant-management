@@ -24,7 +24,7 @@ export default function Navbar() {
     setIsLoggedIn(current.value = false)
   }
   const login =()=>{
-    setIsLoggedIn(current.value = true)
+router.push('login')
   }
   return (
     <nav className="bg-blue-600 text-primary-foreground">
