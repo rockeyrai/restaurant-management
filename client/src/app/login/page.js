@@ -1,10 +1,10 @@
 // src/components/AuthForm.js
 'use client';
-import { login } from '@/lib/redux/slices/userSlices';
+import { setUser } from '@/lib/redux/slices/userSlice';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 require('dotenv').config();
 
 const AuthForm = () => {
@@ -15,13 +15,26 @@ const AuthForm = () => {
     password: '',
     phone: '',
   });
-  const dispatch = useDispatch(); // Initialize the dispatch hook
-  const user = useSelector((state) => state.user.user);
-  const router =useRouter()
+  const dispatch = useDispatch();
+   const router = useRouter()
+     // Check if the user is already logged in
   useEffect(() => {
-    console.log('User in Profile:', user);
-  }, [user]);
+    const checkLoginStatus = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
+          withCredentials: true, // Include cookies in the request
+        });
+        if (response.data.loggedIn) {
+          alert('You are already logged in!');
+          router.push('/'); // Redirect to home page
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error.response?.data || error.message);
+      }
+    };
 
+    checkLoginStatus();
+  }, [router]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,20 +49,24 @@ const AuthForm = () => {
     try {
       const response = await axios.post(url, formData, {
         headers: { 'Content-Type': 'application/json' },
+        withCredentials: true, // Allows cookies to be set
       });
-      console.log(response.data); // Handle response
-
+      debugger
       if (response.data.user) {
-        // Dispatch login action if the response contains user data
-        dispatch(login(response.data.user));
+        // Dispatch the user data to Redux
+        const { user_id, role, username } = response.data.user;
+        alert(`User ID: ${user_id}, Role: ${role}, Name: ${username}`);
+        dispatch(setUser({ userId: user_id, userRole: role, userName: username }));
+
         alert(response.data.message); // Optionally show success message
-        router.push('/')
+        router.push('/'); // Redirect to home page
       }
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
       alert('An error occurred. Please try again.');
     }
   };
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">

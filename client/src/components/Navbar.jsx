@@ -3,14 +3,34 @@ import { useRouter } from "next/navigation";
 import { Home, Info, MenuIcon, Gift, LogIn, LogOut, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import Fuse from "fuse.js";
 import _ from "lodash"; // Import lodash for debounce
 
 export default function Navbar() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false); // State for dropdown visibility
+  const dispatch = useDispatch();
+  const { userId, role, isLoggedIn } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (userId) {
+        try {
+          const response = await axios.get(`/api/users/${userId}`); // Replace with your API endpoint
+          const userData = response.data;
+          dispatch(setUser({ userId, role: userData.role, username: userData.username }));
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [userId, dispatch]);
 
   const data = [
     { name: "Pizza" },
@@ -107,6 +127,7 @@ export default function Navbar() {
             </Button>
           )}
         </div>
+        <p>Welcome, {userId || 'Guest'}</p>
       </div>
 
       <div className="flex items-center justify-between h-10 px-10">

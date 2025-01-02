@@ -5,6 +5,8 @@ const mysqlPool = require('./database/mysql');  // Import the connection pool
 const { mongoose } = require('./database/mongodb');  // Import mongoose instance
 const authRoutes = require('./routes/auth')
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const router = express.Router();
 
 
 // Define your MongoDB schema and model here
@@ -16,15 +18,18 @@ const SomeMongoModel = mongoose.model('SomeMongoModel', new mongoose.Schema({
 // Connect to databases
 connectMongoDB();
 
+
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 // Use CORS middleware
 // Use CORS middleware to allow cross-origin requests from your frontend
 app.use(cors({
   origin: process.env.FRONTEND_URL, // Frontend URL (React)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true, // If you're using cookies or authentication
+  credentials: true, // Allow cookies
 }));
+
 app.use('/auth', authRoutes);
 // MongoDB Route
 app.get('/mongo-data', async (req, res) => {
@@ -42,6 +47,11 @@ app.get('/mysql-data', (req, res) => {
     if (err) res.status(500).send(err);
     else res.send(results);
   });
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 // Set port with fallback if the environment variable is not set

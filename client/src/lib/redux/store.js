@@ -1,33 +1,35 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Default to localStorage
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist/es/constants';
-import userReducer from './slices/userSlices';
 import menuReducer from './slices/menuSlice';
 import orderReducer from './slices/orderSlice';
 import reservationReducer from './slices/reservationSlice';
 import settingsReducer from './slices/settingSlice';
+import userReducer from './slices/userSlice';
 
+// Combine all reducers into one root reducer
+const rootReducer = combineReducers({
+  user: userReducer,
+  menu: menuReducer,
+  orders: orderReducer,
+  reservations: reservationReducer,
+  settings: settingsReducer,
+});
+
+// Persist configuration
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'menu', 'orders', 'reservations', 'settings'], // Persist these slices
+  whitelist: ['user', 'menu', 'orders', 'reservations', 'settings'], // Only persist these slices
 };
 
-const persistedUserReducer = persistReducer(persistConfig, userReducer);
-const persistedMenuReducer = persistReducer(persistConfig, menuReducer);
-const persistedOrderReducer = persistReducer(persistConfig, orderReducer);
-const persistedReservationReducer = persistReducer(persistConfig, reservationReducer);
-const persistedSettingsReducer = persistReducer(persistConfig, settingsReducer);
+// Wrap the rootReducer with persistReducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// Configure the store
 const store = configureStore({
-  reducer: {
-    user: persistedUserReducer,
-    menu: persistedMenuReducer,
-    orders: persistedOrderReducer,
-    reservations: persistedReservationReducer,
-    settings: persistedSettingsReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -36,6 +38,7 @@ const store = configureStore({
     }),
 });
 
+// Create the persistor
 const persistor = persistStore(store);
 
 export { store, persistor };

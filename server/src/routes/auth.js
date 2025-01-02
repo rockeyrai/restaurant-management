@@ -39,6 +39,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
 // Login a user
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -75,9 +76,17 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1h' }
     );
 
+    // Save the token in a cookie
+    res.cookie('token', token, {
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Use lax for development
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+    
+
     res.status(200).json({
       message: 'Login successful',
-      token,
       user: {
         user_id: user.user_id,
         username: user.username,
@@ -90,5 +99,18 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+router.get('/status', (req, res) => {
+  const token = req.cookies.token; // Retrieve token from cookies
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+      return res.status(200).json({ loggedIn: true, user: decoded });
+    } catch (error) {
+      return res.status(401).json({ loggedIn: false, message: 'Invalid token' });
+    }
+  }
+  res.status(200).json({ loggedIn: false, message: 'Not logged in' });
+});
+
 
 module.exports = router;
