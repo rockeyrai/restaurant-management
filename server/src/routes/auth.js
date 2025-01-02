@@ -22,12 +22,10 @@ router.post('/register', async (req, res) => {
     const password_hash = await bcrypt.hash(password, salt);
 
     // Insert user into MySQL
-    const [result] = await mysqlPool
-      .promise()
-      .query(
-        'INSERT INTO users (username, email, password_hash, phone_number, role) VALUES (?, ?, ?, ?, ?)',
-        [username, email, password_hash, phone_number || null, role || 'customer']
-      );
+    const [result] = await mysqlPool.query(
+      'INSERT INTO users (username, email, password_hash, phone_number, role) VALUES (?, ?, ?, ?, ?)',
+      [username, email, password_hash, phone_number || null, role || 'customer']
+    );
 
     res.status(201).json({ message: 'User registered successfully', user_id: result.insertId });
   } catch (err) {
@@ -38,7 +36,6 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // Login a user
 router.post('/login', async (req, res) => {
@@ -51,7 +48,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Fetch user from MySQL
-    const [users] = await mysqlPool.promise().query('SELECT * FROM users WHERE email = ?', [email]);
+    const [users] = await mysqlPool.query('SELECT * FROM users WHERE email = ?', [email]);
 
     if (users.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password.' });
@@ -99,6 +96,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 router.get('/status', (req, res) => {
   const token = req.cookies.token; // Retrieve token from cookies
   if (token) {
@@ -111,6 +109,5 @@ router.get('/status', (req, res) => {
   }
   res.status(200).json({ loggedIn: false, message: 'Not logged in' });
 });
-
 
 module.exports = router;

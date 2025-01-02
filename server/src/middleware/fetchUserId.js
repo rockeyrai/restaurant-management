@@ -5,13 +5,13 @@ const { Notification } = require('../models/notification');
 async function getUserAndNotifications(userId) {
   try {
     // Step 1: Query MySQL for the user
-    const [userResult] = await mysqlPool.promise().query(
+    const [userResult] = await mysqlPool.query(
       'SELECT * FROM users WHERE user_id = ?',
       [userId]
     );
 
     if (userResult.length === 0) {
-      return { error: 'User not found' };
+      throw new Error('User not found');
     }
 
     const user = userResult[0];
@@ -28,4 +28,6 @@ async function getUserAndNotifications(userId) {
 }
 
 // Example Usage
-getUserAndNotifications(1).then((data) => console.log(data));
+getUserAndNotifications(1)
+  .then((data) => console.log(data))
+  .catch((err) => console.error(err)); // Handle errors properly here

@@ -42,30 +42,39 @@ const AuthForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = isLogin
-      ? `${process.env.NEXT_PUBLIC_API_URL}/auth/login`
-      : `${process.env.NEXT_PUBLIC_API_URL}/auth/register`;
-
+  
     try {
-      const response = await axios.post(url, formData, {
+      const authUrl = isLogin
+        ? `${process.env.NEXT_PUBLIC_API_URL}/auth/login`
+        : `${process.env.NEXT_PUBLIC_API_URL}/auth/register`;
+    
+      const authResponse = await axios.post(authUrl, formData, {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true, // Allows cookies to be set
+        withCredentials: true,
       });
-      debugger
-      if (response.data.user) {
-        // Dispatch the user data to Redux
-        const { user_id, role, username } = response.data.user;
-        alert(`User ID: ${user_id}, Role: ${role}, Name: ${username}`);
-        dispatch(setUser({ userId: user_id, userRole: role, userName: username }));
-
-        alert(response.data.message); // Optionally show success message
-        router.push('/'); // Redirect to home page
+    
+      console.log('Auth Response Data:', authResponse.data);
+    
+      const userId = authResponse.data.user?.user_id || authResponse.data.userId;
+      if (!userId) {
+        throw new Error('Invalid authentication response: Missing userId');
       }
+    
+      const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`);
+      const userData = userResponse.data;
+    
+      dispatch(setUser({ userId, role: userData.role, userName: userData.username }));
+    
+      alert('User logged in successfully!');
+      router.push('/');
     } catch (error) {
-      console.error(error.response ? error.response.data : error.message);
-      alert('An error occurred. Please try again.');
+      console.error('Error during login:', error.response || error.message);
+      alert('Login failed. Please try again.');
     }
+    
+    
   };
+  
 
 
   return (

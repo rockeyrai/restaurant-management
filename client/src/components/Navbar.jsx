@@ -8,21 +8,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Fuse from "fuse.js";
 import _ from "lodash"; // Import lodash for debounce
+import { setUser } from "@/lib/redux/slices/userSlice";
 
 export default function Navbar() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false); // State for dropdown visibility
   const dispatch = useDispatch();
-  const { userId, role, isLoggedIn } = useSelector((state) => state.user);
+  const { userId, role, userName, isLoggedIn } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (userId) {
+      if (userId && !role) { // Fetch only if userId exists and role is not already fetched
         try {
-          const response = await axios.get(`/api/users/${userId}`); // Replace with your API endpoint
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`); // Replace with your API endpoint
           const userData = response.data;
-          dispatch(setUser({ userId, role: userData.role, username: userData.username }));
+
+          dispatch(
+            setUser({
+              userId,
+              role: userData.role,
+              userName: userData.username,
+            })
+          );
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -30,7 +38,7 @@ export default function Navbar() {
     };
 
     fetchUserData();
-  }, [userId, dispatch]);
+  }, [userId, role, dispatch]); // Add `role` to dependency array
 
   const data = [
     { name: "Pizza" },
