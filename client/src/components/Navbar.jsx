@@ -135,7 +135,7 @@ export default function Navbar() {
             </Button>
           )}
         </div>
-        <p>Welcome, {userId || 'Guest'}</p>
+        <p>Welcome, {userName || 'Guest'}</p>
       </div>
 
       <div className="flex items-center justify-between h-10 px-10">
