@@ -1,8 +1,8 @@
-// redux/slices/squaresSlice.js
+// squaresSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  squares: Array(25).fill(null), // For a 5x5 grid
+  squares: Array(100).fill(null), // 10x10 grid, initially empty
   isEditing: false,
 };
 
@@ -10,14 +10,21 @@ const squaresSlice = createSlice({
   name: 'squares',
   initialState,
   reducers: {
-    toggleEditMode(state) {
+    toggleEditMode: (state) => {
       state.isEditing = !state.isEditing;
     },
-    updateSquare(state, action) {
-      const { index, type } = action.payload;
-      state.squares[index] = type;
+    updateSquare: (state, action) => {
+      const { indexes, type } = action.payload;
+
+      if (Array.isArray(indexes)) {
+        indexes.forEach(index => {
+          state.squares[index] = type;
+        });
+      } else {
+        console.error('Error: indexes is not an array', indexes);
+      }
     },
-    clearSquare(state, action) {
+    clearSquare: (state, action) => {
       const { index } = action.payload;
       state.squares[index] = null;
     },
@@ -25,4 +32,5 @@ const squaresSlice = createSlice({
 });
 
 export const { toggleEditMode, updateSquare, clearSquare } = squaresSlice.actions;
+
 export default squaresSlice.reducer;
