@@ -1,3 +1,4 @@
+'use client'
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Default to localStorage
@@ -7,11 +8,13 @@ import orderReducer from './slices/orderSlice';
 import reservationReducer from './slices/reservationSlice';
 import settingsReducer from './slices/settingSlice';
 import userReducer from './slices/userSlice';
+import squaresReducer  from './slices/squaresSlice';
 
 // Combine all reducers into one root reducer
 const rootReducer = combineReducers({
   user: userReducer,
   menu: menuReducer,
+  squares:squaresReducer ,
   orders: orderReducer,
   reservations: reservationReducer,
   settings: settingsReducer,
@@ -21,7 +24,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'menu', 'orders', 'reservations', 'settings'], // Only persist these slices
+  whitelist: ['user', 'menu','squares', 'orders', 'reservations', 'settings'], // Only persist these slices
 };
 
 // Wrap the rootReducer with persistReducer
