@@ -1,0 +1,21 @@
+.selectSection {
+  display: flex;
+  gap: 3rem;
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.icon{
+  padding: 10px;
+  cursor: pointer;
+  background-color: #ddd;
+  margin-bottom: 5px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.canvas {
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  cursor: pointer;
+}

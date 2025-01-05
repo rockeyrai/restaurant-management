@@ -7,6 +7,7 @@ const router = express.Router();
 const authRoutes = require('./routes/auth')
 const userRoutes =require('./routes/userRouter')
 const menuRoutes = require('./routes/menu')
+const tableRoutes= require('./routes/table')
 
 // Connect to databases
 connectMongoDB();
@@ -26,10 +27,10 @@ app.use(express.raw({ type: 'application/json' }));
 app.use('/auth', authRoutes);
 app.use(userRoutes)
 app.use(menuRoutes)
-router.post('/logout', (req, res) => {
-  res.clearCookie('token');
-  res.status(200).json({ message: 'Logged out successfully' });
-});
+app.use(tableRoutes)
+
+
+
 
 // Set port with fallback if the environment variable is not set
 const PORT = process.env.MY_PORT || 6000;
