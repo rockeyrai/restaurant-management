@@ -13,7 +13,7 @@ export default function App() {
 
   return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+
         <main className="container mx-auto mt-8 p-4">
           <HomeSection />
           <MenuSection />

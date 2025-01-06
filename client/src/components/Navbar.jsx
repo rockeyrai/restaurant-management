@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Fuse from "fuse.js";
 import _ from "lodash"; // Import lodash for debounce
-import { setUser } from "@/lib/redux/slices/userSlice";
+import { clearUser, setUser } from "@/lib/redux/slices/userSlice";
 
 export default function Navbar() {
   const router = useRouter();
@@ -75,7 +75,7 @@ export default function Navbar() {
   };
 
   const logout = () => {
-    setIsLoggedIn(false);
+    dispatch(clearUser());
   };
 
   const login = () => {
@@ -151,6 +151,9 @@ export default function Navbar() {
           </Button>
           <Button variant="ghost" onClick={() => handleNavigation("offer")}>
             Offer
+          </Button>
+          <Button variant="ghost" onClick={() => handleNavigation("table")}>
+            table
           </Button>
         </div>
       </div>
